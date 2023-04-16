@@ -22,19 +22,19 @@ def get_data():
     train = image_dataset_from_directory(
         TRAIN_IMAGES,
         label_mode='categorical',
-        class_names=['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'],
+        # class_names=['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'],
         image_size=(48, 48)
     )
     val = image_dataset_from_directory(
         VAL_IMAGES,
         label_mode='categorical',
-        class_names=['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'],
+        # class_names=['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'],
         image_size=(48, 48)
     )
     test = image_dataset_from_directory(
         TEST_IMAGES,
         label_mode='categorical',
-        class_names=['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'],
+        # class_names=['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'],
         image_size=(48, 48)
     )
     return train, val, test

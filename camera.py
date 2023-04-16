@@ -3,9 +3,9 @@ import cv2
 # noinspection PyUnresolvedReferences
 vid = cv2.VideoCapture(0)
 # noinspection PyUnresolvedReferences
-cascade = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+# cascade = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 # noinspection PyUnresolvedReferences
-face_cascade = cv2.CascadeClassifier(cascade)
+face_cascade = cv2.CascadeClassifier(str(Path(__file__).parent / 'haarcascade_frontalface_default.xml'))
 
 while True:
     ret, frame = vid.read()
