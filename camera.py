@@ -2,7 +2,6 @@ from pathlib import Path
 from io import BytesIO
 import cv2
 from PIL import Image
-import numpy as np
 from keras import models
 from keras.utils import load_img, img_to_array, array_to_img
 
@@ -19,20 +18,25 @@ while ret:
     ret, frame = vid.read()
     # noinspection PyUnresolvedReferences
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.5, minNeighbors=4, minSize=(40, 40))
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.5, minNeighbors=4, minSize=(48, 48))
+    images = []
     for x, y, w, h in faces:
         # noinspection PyUnresolvedReferences
         cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        images.append(Image.fromarray(frame).crop((x, y, x + w, y + h)))
     # noinspection PyUnresolvedReferences
     cv2.imshow('frame', frame)
     # img = load_img(frame, target_size=(48, 48))
-    #
-    img = array_to_img(frame).resize((48, 48))
+
+    for i in images:
+        # add coords!!!
+        print(i.size)
+    '''img = array_to_img(frame).resize((48, 48))
     with BytesIO() as byte_io:
         img.save(byte_io, format='png')
         img = load_img(byte_io, target_size=(48, 48, 3))
         img_arr = img_to_array(img)
-        print(model.predict([img_arr]))
+        print(model.predict([img_arr]))'''
 
     # noinspection PyUnresolvedReferences
     if cv2.waitKey(1) and 0xFF == ord("q"):
