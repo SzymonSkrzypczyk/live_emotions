@@ -60,4 +60,6 @@ def create_model(_train, _val, _epochs: int = 10, _batch_size: int = 32):
 
 if __name__ == '__main__':
     data = get_data()
-    print(create_model(data[0], data[1]).summary())
+    model = create_model(data[0], data[1], _epochs=5)
+    model.save('model.h5')
+    print(model.predict(data[2]))
