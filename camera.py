@@ -33,22 +33,27 @@ while ret:
     for x, y, w, h in faces:
         # noinspection PyUnresolvedReferences
         cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-        images.append(Image.fromarray(frame).crop((x, y, x + w, y + h)))
+        images.append((Image.fromarray(frame).crop((x, y, x + w, y + h)), x + w, y + h))
     # noinspection PyUnresolvedReferences
     cv2.imshow('frame', frame)
     # img = load_img(frame, target_size=(48, 48))
 
     for i in images:
-        print(i.size)
+        img = i[0]
         # add coords!!!
-    img = array_to_img(frame).resize((48, 48))
-    with BytesIO() as byte_io:
-        img.save(byte_io, format='png')
-        img = load_img(byte_io, target_size=(48, 48))
-        img_arr = img_to_array(img)
-        prediction = model.predict(np.expand_dims(img_arr, axis=0), verbose=False)
-        prediction.flatten()
-        print(np.argmax(prediction))
+        # img = array_to_img(frame).resize((48, 48))
+        with BytesIO() as byte_io:
+            img.save(byte_io, format='png')
+            img = load_img(byte_io, target_size=(48, 48))
+            img_arr = img_to_array(img)
+            prediction = model.predict(np.expand_dims(img_arr, axis=0), verbose=False)
+            prediction.flatten()
+            print(EMOTIONS[int(np.argmax(prediction))])
+            predicted_text = f'{EMOTIONS[int(np.argmax(prediction))]}: {prediction[0]}'
+            # noinspection PyUnresolvedReferences
+            cv2.putText(
+                frame, predicted_text, (i[1], i[2]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA
+            )
 
     # noinspection PyUnresolvedReferences
     if cv2.waitKey(1) and 0xFF == ord("q"):
