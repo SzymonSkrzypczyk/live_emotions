@@ -17,21 +17,21 @@ EMOTIONS = {
 }
 
 
-def get_colour(_emotion: int):
+def get_colour(_emotion: str):
     match _emotion:
-        case 0:
+        case "Angry":
             return 0, 0, 255
-        case 1:
+        case "Disgust":
             return 255, 0, 191
-        case 2:
+        case "Fear":
             return 128, 128, 128
-        case 3:
+        case "Happy":
             return 0, 255, 64
-        case 4:
+        case "Sad":
             return 255, 0, 0
-        case 5:
+        case "Surprise":
             return 0, 255, 255
-        case 6:
+        case "Neutral":
             return 255, 255, 0
 
 
@@ -49,14 +49,9 @@ while ret:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, scaleFactor=1.5, minNeighbors=4, minSize=(48, 48))
     images = []
-    for x, y, w, h in faces:
-        # noinspection PyUnresolvedReferences
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-        images.append((Image.fromarray(frame).crop((x, y, x + w, y + h)), x + w, y + h))
-    # img = load_img(frame, target_size=(48, 48))
 
-    for i in images:
-        img = i[0]
+    for x, y, w, h in faces:
+        img = Image.fromarray(frame).crop((x, y, x + w, y + h))
         # add coords!!!
         # img = array_to_img(frame).resize((48, 48))
         with BytesIO() as byte_io:
@@ -65,11 +60,13 @@ while ret:
             img_arr = img_to_array(img)
             prediction = model.predict(np.expand_dims(img_arr, axis=0), verbose=False)
             prediction.flatten()
-            print(EMOTIONS[int(np.argmax(prediction))])
             predicted_text = f'{EMOTIONS[int(np.argmax(prediction))]}: {np.max(prediction):.4f}'
+            col = get_colour(EMOTIONS[int(np.argmax(prediction))])
+            # noinspection PyUnresolvedReferences
+            cv2.rectangle(frame, (x, y), (x + w, y + h), col, 2)
             # noinspection PyUnresolvedReferences
             cv2.putText(
-                frame, predicted_text, (i[1], i[2]), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA
+                frame, predicted_text, (x + w, y + h), cv2.FONT_HERSHEY_SIMPLEX, 1, col, 2, cv2.LINE_AA
             )
     # noinspection PyUnresolvedReferences
     cv2.imshow('frame', frame)
